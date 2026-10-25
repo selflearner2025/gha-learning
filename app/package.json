@@ -1,0 +1,8 @@
+{
+  "name": "reuse-lab",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "node index.js",
+    "build": "mkdir -p dist && cp index.js dist/"
+  }
+}a

@@ -1,0 +1,48 @@
+
+name: Node CI Composite Action
+
+description: Setup Node, install dependencies, test and build
+
+inputs:
+  node-version:
+    description: Node.js version
+    required: false
+    default: '20'
+
+  working-directory:
+    description: Application directory
+    required: false
+    default: './app'
+
+outputs:
+  build-directory:
+    description: Application build directory
+    value: ${{ steps.build.outputs.build-directory }}
+
+runs:
+  using: composite
+
+  steps:
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.node-version }}
+
+    - name: Install dependencies
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: npm install
+
+    - name: Run tests
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: npm test
+
+    - name: Build application
+      id: build
+      shell: bash
+      working-directory: ${{ inputs.working-directory }}
+      run: |
+        npm run build
+        echo "build-directory=${{ inputs.working-directory }}/dist" >> "$GITHUB_OUTPUT"
+        echo "node-version=${{inputs.node-version}}" >> "$GITHUB_OUTPUT"
