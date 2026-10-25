@@ -1,19 +1,32 @@
-name: Application CI
+name: Application CI Buil and Deploy
 
-on: 
+on:
   workflow_dispatch:
-
+    inputs:
+      node-version:
+        description: Node.js version
+        required: false
+        default: '20'
+      working-directory:
+        description: Application directory
+        required: false
+        default: './app'
 jobs:
-  build:
+  application-ci:
+    uses: "./.github/workflows/reusable-workflow.yml"
+    with:
+      node-version: ${{ github.event.inputs.node-version }}
+      working-directory: ${{ github.event.inputs.working-directory }}
+  deploy:
+    needs: application-ci
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-      - name: Build node app
-        id: ci
-        uses: ./.github/actions/node-ci
+      - name: Download build artifatct
+        uses: actions/download-artifact@v4
         with:
-          node-version: '20'
-          working-directory: './app'
-
-
+          name: application-build
+          path: downloaded-build
+      - name: Verify downloaded build
+        run: |
+          echo "Downloaded build directory:"
+          ls -R downloaded-build

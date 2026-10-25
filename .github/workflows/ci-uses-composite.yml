@@ -1,0 +1,19 @@
+name: Application CI
+
+on: 
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Build node app
+        id: ci
+        uses: ./.github/actions/node-ci
+        with:
+          node-version: '20'
+          working-directory: './app'
+
+
