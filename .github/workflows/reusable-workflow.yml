@@ -28,7 +28,7 @@ jobs:
         uses: actions/checkout@v4
       - name: Run composite action
         id: ci
-        uses: ./github/actions/node-ci
+        uses: ./.github/actions/node-ci
         with:
           node-version: ${{ inputs.node-version}}
           working-directory: ${{ inputs.working-directory}}
