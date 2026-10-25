@@ -5,7 +5,7 @@ on:
     secrets:
       secret_for_deploy:
         required: true
-        type: string
+
 
 
 jobs:
@@ -14,8 +14,8 @@ jobs:
     steps:
 
       - name: Download build artifact
-       uses: actions/download-artifact@v4
-       with:
+        uses: actions/download-artifact@v4
+        with:
          name: application-build
          path: downloaded_build 
       - name: Verify secret for deploy
