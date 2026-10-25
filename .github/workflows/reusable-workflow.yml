@@ -1,0 +1,39 @@
+name: Reusable workflow
+
+on: 
+  workflow_call:
+    inputs:
+      node-version:
+        required: false
+        type: string
+        default: '20'
+      working-directory:
+        required: false
+        type: string
+        default: './app'
+    outputs:
+      build-directory:
+        description: Application build directory
+        value: ${{ jobs.build.outputs.build-directory }}
+
+
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    outputs:
+      build-directory: ${{ steps.ci.outputs.build-directory }}
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Run composite action
+        id: ci
+        uses: ./github/actions/node-ci
+        with:
+          node-version: ${{ inputs.node-version}}
+          working-directory: ${{ inputs.working-directory}}
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: application-build
+          path: ${{ steps.ci.outputs.build-directory}}
